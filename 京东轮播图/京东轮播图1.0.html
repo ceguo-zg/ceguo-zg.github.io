@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>动画-案例《轮播图》</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .slider {
+            height: 340px;
+            width: 790px;
+            margin: 100px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider ul {
+            display: flex;
+            justify-content: space-around;
+            /* width: 6320px; */
+            position: absolute;
+            /* display: none; */
+        }
+
+        .slider li {
+            display: inline-block;
+
+        }
+
+
+        .arrow {
+            display: none;
+        }
+
+        .slider:hover .arrow {
+            display: block;
+        }
+
+        .arrow-left,
+        .arrow-right {
+            font-family: "SimSun", "宋体";
+            width: 30px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50%;
+            margin-top: -30px;
+            background-color: aqua;
+            cursor: pointer;
+            text-align: center;
+            line-height: 60px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 30px;
+        }
+
+        .arrow-left:hover,
+        .arrow-right:hover {
+            background-color: rgba(0, 0, 0, .5);
+        }
+
+        .arrow-left {
+            left: 0;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+
+        .small-nav {
+            position: absolute;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            height: 50px;
+        }
+
+        .small-nav span {
+            /* position: absolute; */
+            display: inline-block;
+            cursor: pointer;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background-color: white;
+            opacity: .8;
+        }
+
+        .small-nav .current {
+            background-color: bisque;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slider">
+        <!--图片容器  8图 -->
+        <ul>
+            <li><a href="#">1<img src="images/jd/1.jpg" alt=""></a></li>
+            <li><a href="#">2<img src="images/jd/2.jpg" alt=""></a></li>
+            <li><a href="#">3<img src="images/jd/3.jpg" alt=""></a></li>
+            <li><a href="#">4<img src="images/jd/4.jpg" alt=""></a></li>
+            <li><a href="#">5<img src="images/jd/5.jpg" alt=""></a></li>
+            <li><a href="#">6<img src="images/jd/6.jpg" alt=""></a></li>
+            <li><a href="#">7<img src="images/jd/7.jpg" alt=""></a></li>
+            <li><a href="#">8<img src="images/jd/8.jpg" alt=""></a></li>
+        </ul>
+        <!--箭头-->
+        <div class="arrow">
+            <span class="arrow-left">&lt;</span>
+            <span class="arrow-right">&gt;</span>
+        </div>
+        <div class="small-nav">
+
+        </div>
+    </div>
+
+    <script src="jquery-1.12.4.js"></script>
+    <script>
+        $(function () {
+            // 提取元素
+            var $uls = $('.slider>ul')
+            var width = $('.slider').width()
+            // console.log(width);
+            // var $uls_left = $uls.position().left;
+            $uls.children('li').eq(0).clone().appendTo($uls)
+            // console.log(left);
+            //声明一个变量index,用来表示要显示的图片索引. 
+            var index = 0;
+            //搞8个span
+            for (let i = 0; i < $('ul>li').length - 1; i++) {
+                var spans = $(`<span>${i + 1}</span>`);
+                $('.small-nav').append(spans)
+            }
+            // 给第一个小span按钮高亮显示
+            $('.small-nav span').eq(0).addClass('current');
+            //实现简单轮播
+            $('.small-nav span').each(function (ind, ele) {
+                $(ele).click(function () {
+                    // console.log(-ind*width);
+                    $uls.animate({ left: -ind * width }, 500)
+                    index = ind;
+                    $(this).addClass('current').siblings('span').removeClass('current')
+                })
+            })
+            // 右按钮实现
+            /* $('.arrow-right').onclick=move(true);
+            // 左按钮实现
+            $('.arrow-left').on('click',move(false))
+            // 左右移动按钮
+            function move(flag) {
+                if (flag) {
+                    index++;
+                    if (index == 9) {
+                        index = 1;
+                        $uls.css('left', 0)
+                    }
+                }
+                else {
+                    index--;
+                    if (index == -1) {
+                        index = 8;
+                        $uls.css('left', -9 * width)
+                    }
+                }
+                var w = -index * width
+                $uls.animate({ left: w }, 500)
+                if (index == 8) {
+                    $('.small-nav span').eq(0).addClass('current').siblings('span').removeClass('current')
+                }
+                else {
+                    $('.small-nav span').eq(index).addClass('current').siblings('span').removeClass('current')
+                }
+
+            } */
+            // 左按钮实现
+            /*  $('.arrow-left').click(function () {
+                 index--;
+                 if (index == -1) {
+                     index = 8;
+                     $uls.css('left', -9* width)
+                 }
+                 var w = -index * width;
+                 $uls.animate({ left: w }, 500)
+                 if (index == 8) {
+                     $('.small-nav span').eq(0).addClass('current').siblings('span').removeClass('current')
+                 }
+                 else {
+                     $('.small-nav span').eq(index).addClass('current').siblings('span').removeClass('current')
+                 }
+             }) */
+
+
+
+
+
+
+            // 右按钮实现
+             $('.arrow-right').click(
+                
+                function () {
+                index++;
+                if (index == 9) {
+                    index = 1;
+                    $uls.css('left', 0)
+                }
+                var w = -index * width
+                $uls.animate({ left: w }, 500)
+                if (index == 8) {
+                    $('.small-nav span').eq(0).addClass('current').siblings('span').removeClass('current')
+                }
+                else {
+                    $('.small-nav span').eq(index).addClass('current').siblings('span').removeClass('current')
+                }
+
+            })
+            // 左按钮实现
+            $('.arrow-left').click(function () {
+                index--;
+                if (index == -1) {
+                    index = 7;
+                    $uls.css('left', -8* width)
+                }
+                var w = -index * width;
+                $uls.animate({ left: w }, 500)
+                if (index == 8) {
+                    $('.small-nav span').eq(0).addClass('current').siblings('span').removeClass('current')
+                }
+                else {
+                    $('.small-nav span').eq(index).addClass('current').siblings('span').removeClass('current')
+                }
+            }) 
+            // 计时器函数
+            /*  function fn(ele,target) {
+                 clearInterval(ele.timeId);
+                  ele.timeId=setInterval(function(){
+                      let currentLeft=ele.left;
+                     let step=target>currentLeft?30:-30;
+                     currentLeft+=step;
+                     if(Math.abs(target-currentLeft)>Math.abs(step)) {
+                         left=currentLeft+'px';
+                     }
+                     else {
+                         left=target+'px';
+                         clearInterval(ele.timeId)
+                     }
+                 },50) */
+            // }
+        })
+    </script>
+</body>
+
+</html>

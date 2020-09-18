@@ -114,6 +114,7 @@
         </div>
     </div>
 
+    <script src="../animate.js"></script>
     <script>
         //思路
         //1.获取对应的元素
@@ -140,89 +141,125 @@
         //      无限无缝轮播
         //  左边焦点设置点击事件.
         //1.获取对应的元素. 
-
-        let box = document.querySelector('#box');
-        let scr = document.querySelector('.screen');
-        let lis = document.querySelectorAll('.screen>ul>li');
-        let ul = document.querySelector('.screen>ul');
-        let arr = document.querySelector('#arr');
-        let lt = document.querySelector('#left');
-        let rt = document.querySelector('#right');
-        let ol = document.querySelector('.screen>ol');
-        let wd = scr.offsetWidth;
-        let s = 0;//起始按钮
-     
-        box.onmouseover=function() {
-            arr.style.display='block';
-        }
-     
-        box.onmouseout=function() {
-            arr.style.display='none';
-        }
-
-        // 搞五个按钮
-        for(let i=0;i<lis.length;i++) {
-        let li=document.createElement('li');
-            li.innerHTML=i+1;
+        let box = document.querySelector('#box')
+        let scr = document.querySelector('.screen')
+        let lis = document.querySelectorAll('li')
+        let ol = document.querySelector('ol')
+        let ul = document.querySelector('ul')
+        let lt = document.querySelector('#left')
+        let rt = document.querySelector('#right')
+        let arr = document.querySelector('#arr')
+        let setlef = ul.offsetLeft;
+        let setwidth = scr.offsetWidth;
+        console.log(setwidth)
+        // 往ol中添加li
+        for (let i = 0; i < lis.length; i++) {
+            // 创建小li,追加到ol
+            li = document.createElement('li')
+            li.innerHTML = i + 1;
             ol.appendChild(li);
         }
-        // 遍历每个按钮添加点击事件
-        ol.children[0].setAttribute('class','current')
-        for(let i=0;i<lis.length;i++) {
-            ol.children[i].setAttribute('index',i)
-            ol.children[i].onclick=function() {
+        let olchs= ol.children
+        console.log(ol)
+        // 克隆第一张图到ul最后
+        ul.appendChild(ul.children[0].cloneNode(true))
+        // 遍历小按钮li
+        let s=ss=0;
+        // 简单轮播
+        for (let i = 0; i < lis.length; i++) {
+            // 每个ol的小li添加索引
+            olchs[i].setAttribute('index',i)
+            olchs[0].setAttribute('class','current')
+            olchs[i].onclick = function () {
                 for(let j=0;j<lis.length;j++) {
-                    ol.children[j].removeAttribute('class')
+                    olchs[j].removeAttribute('class')
                 }
-                this.setAttribute('class','current');
-                let ind=this.getAttribute('index');
-                s=ind;
-                let ta=-ind*wd;
-                animate(ul,ta)
+                this.setAttribute('class','current')
+                // 获取目标值
+                let ind= olchs[i].getAttribute('index')
+                let tar = setlef - setwidth * ind;
+                s=ss=ind;
+                console.log(tar)
+                animate(ul,tar)
             }
         }
-        // 克隆第一张图片，并放到最后
-      ul.appendChild(ul.children[0].cloneNode(true));
-    //    启动右按钮
-       rt.onclick=function() {
-           s++;
-           if(s>5) {
-               s=1;
-               ul.style.left=0+'px';
-           }
-           let tar=-s*wd;
-           animate(ul,tar)
-           for(let j=0;j<lis.length;j++) {
-            ol.children[j].removeAttribute('class')
-           }
-            if(s==5) {
-           ol.children[0].setAttribute('class','current')
-           } 
-           else {
-           ol.children[s].setAttribute('class','current')
-           }
-       }
-
-
-
-        function animate(ele, target) {
-            clearInterval(ele.timeId)
-            ele.timeId = setInterval(function () {
-                let current = ele.offsetLeft;
-                // console.log(current)
-                let step = target - current;
-                step = step > 0 ? 31 : -31;
-                current += step;
-                // console.log(current)
-                if (Math.abs(current - target) > Math.abs(step)) {
-                    ele.style.left = current + 'px';
-                }
-                else {
-                    ele.style.left = target + 'px';
-                    clearInterval(ele.timeId)
-                }
-            }, 20)
+        // 给左右焦点设置轮播
+        // 鼠标移入和移出显示按钮
+        console.log(arr)
+       /*  box.onmouseover=function() {
+            arr.style.display='block'
         }
+        box.onmouseout=function() {
+            arr.style.display='none'
+        } */
+        // 给左右按钮添加轮播效果
+        rt.onclick=re_time
+        lt.onclick=function () {
+          /*  let li = document.createElement('li')
+            ol.appendChild(li) */
+            if(s==0) {
+                s=5;
+        ul.style.left = -5*setwidth+'px';
+            }
+            // console.log(ol)
+            s--;
+            let tar=-s*setwidth;
+            animate(ul,tar)
+            for(let i=0;i<lis.length;i++) {
+                olchs[i].removeAttribute('class')
+            }
+            // 声明一个可以获取当前属性的变量
+            ss--;
+            if(ss<0) {
+                ss=4;
+            }
+            // console.log(ss)
+            olchs[ss].setAttribute('class','current')
+        }
+        // 设置轮播图效果
+       function re_time() {
+           
+            if(s==5) {
+                s=0;
+        ul.style.left = '0px';
+            }
+            // console.log(ol)
+            s++;
+            let tar=-s*setwidth;
+            animate(ul,tar)
+            for(let i=0;i<lis.length;i++) {
+                olchs[i].removeAttribute('class')
+            }
+            // 这个ss不要也罢
+            // ss++;
+            // if(ss==5) {
+            //     ss=0;
+            // }
+            if(s==5) {
+            olchs[0].setAttribute('class','current')
+            }
+            // console.log(ss)
+            else {
+            olchs[s].setAttribute('class','current')
+            }
+           }
+      
+      let timerid=setInterval(re_time,1000)
+    // //    s鼠标移入时停止
+     box.onmouseover=function() {
+        arr.style.display='block'
+         clearInterval(timerid)
+     }
+    //    s鼠标移c出时开启
+     box.onmouseout=function() {
+        arr.style.display='none'
+        timerid=setInterval(re_time,1000)
+     }
+
+
+
+
+
     </script>
 </body>
 
